@@ -1,0 +1,73 @@
+﻿@model BrewDogBeerFavoriteListModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Favorite Beer List</h1>
+<br />
+
+
+<form asp-action="Index" role="form" class="form-inline">
+    <div class="form-group">
+        <label asp-for="@Model.Email" class="control-label">Enter email address:</label>
+        <input asp-for="@Model.Email" class="form-control" required />
+        <span asp-validation-for="@Model.Email" class="text-danger"></span>
+    </div>
+    <div class="actions">
+        <button type="submit" class="btn btn-primary">Set Email</button>
+    </div>
+</form>
+<br />
+@if (!string.IsNullOrEmpty(Model.Email))
+{
+    @if (Model.BrewDogBeerModels.Count() == 0)
+    {
+        <p>There are no favorite beers for this email</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).TagLine)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).FirstBrewed)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).ABV)
+                    </th>
+                    @*<th></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.BrewDogBeerModels)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TagLine)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstBrewed)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ABV)
+                        </td>
+                        @*<td>
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        </td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

@@ -1,0 +1,111 @@
+﻿@model BrewDogBeerPagedListModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Beer List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).TagLine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).FirstBrewed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrewDogBeerModels.ElementAt(0).ABV)
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BrewDogBeerModels)
+        {
+            <tr>
+                <td onclick="location.href = '@Url.Action("Details", "Home", new { id = item.Id})'">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td onclick="location.href = '@Url.Action("Details", "Home", new { id = item.Id})'">
+                    @Html.DisplayFor(modelItem => item.TagLine)
+                </td>
+                <td onclick="location.href = '@Url.Action("Details", "Home", new { id = item.Id})'">
+                    @Html.DisplayFor(modelItem => item.FirstBrewed)
+                </td>
+                <td onclick="location.href = '@Url.Action("Details", "Home", new { id = item.Id})'">
+                    @Html.DisplayFor(modelItem => item.ABV)
+                </td>
+                <td>
+                    @Html.CheckBoxFor(modelItem => item.Checked, new { id = item.Id, onclick = "UpdateFavorites(event);" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<form asp-action="Index" asp-controller="Home" method="post" class="form-inline">
+    <table cellpadding="5" cellspacing="0">
+        <tr>
+            @for (int i = 1; i <= Model.Pages; i++)
+            {
+                <td>
+                    @if (i != Model.CurrentPage)
+                    {
+                        <a href="javascript:PagerClick(@i);">@i</a>
+                    }
+                    else
+                    {
+                        <span>@i</span>
+                    }
+                </td>
+            }
+        </tr>
+    </table>
+    <div class="form-group">
+        <input class="form-control" id="beerNameSearch" name="BeerName" value="@(TempData.Keys.Contains("beerName") ? TempData["beerName"].ToString() : "")"/>
+        <a href="javascript:PagerClick(1);" class="btn btn-primary">Search</a>
+    </div>    
+    <input type="hidden" id="hCurrentPage" name="pageNumber" />
+    <input type="hidden" id="hSearchString" name="beerName" />
+</form>
+<br />
+<form asp-action="AddFavorite" asp-controller="Home" role="form" class="form-inline" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label class="control-label">Enter email address:</label>
+        <input type="email" required class="form-control" id="userEmail" name="Email"/>
+
+    </div>
+    <div class="actions">
+        <button type="submit" class="btn btn-primary">Add beers to favorite</button>
+    </div>
+    <input type="hidden" id="hCurrentSelection" name="CurrentSelection" />
+</form>
+<script type="text/javascript">
+
+    function PagerClick(index) {
+        document.getElementById("hCurrentPage").value = index;
+        document.getElementById("hSearchString").value = document.getElementById("beerNameSearch").value;
+        document.forms[0].submit();
+    }
+
+    function UpdateFavorites(event) {
+        var checked = document.querySelectorAll('input[type="checkbox"]:checked');        
+
+        if (checked.length > 5) {
+            event.srcElement.checked = false;
+            alert("Maximum of 5 beers can be added to the favorites");
+            return;
+        }
+
+        document.getElementById("hCurrentSelection").value = "";
+        if (checked.length !== 0) {
+            checked.forEach(function (a, b, c) { document.getElementById("hCurrentSelection").value = document.getElementById("hCurrentSelection").value + '|' + a.id });
+        }
+    }
+</script>
+

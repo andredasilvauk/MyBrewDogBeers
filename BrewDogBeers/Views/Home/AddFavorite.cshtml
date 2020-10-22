@@ -1,0 +1,31 @@
+﻿@model BrewDogBeersData.AddFavoriteBeersResult
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>View</h1>
+
+<div>
+    <h4>AddFavoriteBeersResult</h4>
+    <hr />
+    <dl class="row">
+    </dl>
+</div>
+<div>
+    @switch (Model)
+    {
+        case BrewDogBeersData.AddFavoriteBeersResult.Success:
+            <p>Beers added to favorites</p>
+            break;
+        case BrewDogBeersData.AddFavoriteBeersResult.TooManyBeerFavorites:
+            <p>There were too many beers in favorites</p>
+            break;
+        case BrewDogBeersData.AddFavoriteBeersResult.FailureUpdatingRecord:
+            <p>Error adding beers to favorites</p>
+            break;
+        default:
+            break;
+    }
+</div>
